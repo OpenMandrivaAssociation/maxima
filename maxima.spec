@@ -27,14 +27,14 @@
 
 Summary: Maxima Symbolic Computation Program
 Name: 		maxima
-Version: 	5.11.0
-Release: 	%mkrel 2
+Version: 	5.12.0
+Release: 	%mkrel 1
 License: 	GPL
 Group: 		Sciences/Mathematics
 URL: 		http://maxima.sourceforge.net
 Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.bz2
 Source1:	icons-%{name}.tar.bz2
-Patch0:		maxima-5.11.0-gv.patch
+#Patch0:		maxima-5.11.0-gv.patch
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-root
 BuildRequires:	texinfo
 BuildRequires:	tetex
@@ -104,7 +104,7 @@ Maxima compiled with Gnu Common Lisp.
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p0 -b .gv
+#%patch0 -p0 -b .gv
 
 %build
 export GCL_ANSI=y
