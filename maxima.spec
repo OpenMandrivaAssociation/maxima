@@ -28,7 +28,7 @@
 Summary: Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.12.0
-Release: 	%mkrel 1
+Release: 	%mkrel 2
 License: 	GPL
 Group: 		Sciences/Mathematics
 URL: 		http://maxima.sourceforge.net
@@ -39,6 +39,7 @@ BuildRoot: 	%{_tmppath}/%{name}-%{version}-root
 BuildRequires:	texinfo
 BuildRequires:	tetex
 Requires: 	tk
+Requires:       tcl
 Requires:	maxima-runtime
 Requires:	gnuplot
 Requires:	gv
@@ -61,6 +62,25 @@ based on the original Macsyma developed at MIT in the 1970's.  It is
 quite reliable, and has good garbage collection, and no memory leaks.
 It comes with hundreds of self tests.
 
+%post
+%_install_info maxima.info
+
+%postun
+%_remove_install_info maxima.info
+
+%files
+%defattr(-,root,root)
+%doc AUTHORS COPYING ChangeLog INSTALL README README.lisps
+#%doc doc/info/maxima.pdf
+%{_bindir}/maxima
+%{_libdir}/maxima/%{version}/mgnuplot
+%{_datadir}/maxima/%{version}/*
+%{_infodir}/*.info*
+%{_infodir}/maxima-index.lisp
+%{_mandir}/man1/maxima.*
+
+#--------------------------------------------------------------------
+
 %package gui
 Summary: Tcl/Tk GUI interface to Maxima
 Group:		Sciences/Mathematics
@@ -69,6 +89,16 @@ Requires:	tk
 Provides:	xmaxima = %{version}-%{release}
 %description gui
 Tcl/Tk GUI interface to Maxima.
+
+%files gui
+%defattr(-,root,root)
+%{_bindir}/xmaxima
+%{_datadir}/applications/mandriva-%{name}.desktop
+%{_iconsdir}/*.png
+%{_liconsdir}/*.png
+%{_miconsdir}/*.png
+
+#--------------------------------------------------------------------
 
 %if %{enable_clisp}
 %package runtime-clisp
@@ -79,7 +109,13 @@ Requires:	maxima = %{version}-%{release}
 Provides:	maxima-runtime = %{version}-%{release}
 %description runtime-clisp
 Maxima compiled with clisp.
+
+%files runtime-clisp
+%defattr(-,root,root)
+%{_libdir}/maxima/%{version}/binary-clisp/*
 %endif
+
+#--------------------------------------------------------------------
 
 %if %{enable_cmucl}
 %package runtime-cmucl
@@ -90,7 +126,14 @@ Requires:	maxima = %{version}-%{release}
 Provides:	maxima-runtime = %{version}-%{release}
 %description runtime-cmucl
 Maxima compiled with CMUCL.
+
+
+%files runtime-cmucl
+%defattr(-,root,root)
+%{_libdir}/maxima/%{version}/binary-cmucl/*
 %endif
+
+#--------------------------------------------------------------------
 
 %if %{enable_gcl}
 %package runtime-gcl
@@ -100,7 +143,14 @@ Requires:	maxima = %{version}-%{release}
 Provides:	maxima-runtime = %{version}-%{release}
 %description runtime-gcl
 Maxima compiled with Gnu Common Lisp.
+
+%files runtime-gcl
+%defattr(-,root,root)
+%{_bindir}/rmaxima
+%{_libdir}/maxima/%{version}/binary-gcl/*
 %endif
+
+#--------------------------------------------------------------------
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -139,7 +189,7 @@ Exec=%{_bindir}/%{name}
 Icon=%{name}
 Terminal=false
 Type=Application
-Categories=X-MandrivaLinux-MoreApplications-Sciences-Mathematics;Science;Math;
+Categories=Science;Math;
 EOF
 
 
@@ -150,51 +200,5 @@ tar xjf %{SOURCE1} -C $RPM_BUILD_ROOT%{_iconsdir}
 # don't compress info pages
 export EXCLUDE_FROM_COMPRESS=info
 
-%post
-%_install_info maxima.info
-
-%postun
-%_remove_install_info maxima.info
-
 %clean
 rm -rf $RPM_BUILD_ROOT
-
-%files
-%defattr(-,root,root)
-%doc AUTHORS COPYING ChangeLog INSTALL README README.lisps
-#%doc doc/info/maxima.pdf
-%{_bindir}/maxima
-%{_libdir}/maxima/%{version}/mgnuplot
-%{_datadir}/maxima/%{version}/*
-%{_infodir}/*.info*
-%{_infodir}/maxima-index.lisp
-%{_mandir}/man1/maxima.*
-
-%files gui
-%defattr(-,root,root)
-%{_bindir}/xmaxima
-%{_datadir}/applications/mandriva-%{name}.desktop
-%{_iconsdir}/*.png
-%{_liconsdir}/*.png
-%{_miconsdir}/*.png
-
-%if %{enable_clisp}
-%files runtime-clisp
-%defattr(-,root,root)
-%{_libdir}/maxima/%{version}/binary-clisp/*
-%endif
-
-%if %{enable_cmucl}
-%files runtime-cmucl
-%defattr(-,root,root)
-%{_libdir}/maxima/%{version}/binary-cmucl/*
-%endif
-
-%if %{enable_gcl}
-%files runtime-gcl
-%defattr(-,root,root)
-%{_bindir}/rmaxima
-%{_libdir}/maxima/%{version}/binary-gcl/*
-%endif
-
-
