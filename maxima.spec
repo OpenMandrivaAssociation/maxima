@@ -25,16 +25,16 @@
 %define gcl_flags	--disable-gcl
 %endif
 
-Summary: Maxima Symbolic Computation Program
+Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
-Version: 	5.12.0
-Release: 	%mkrel 2
-License: 	GPL
+Version: 	5.13.0
+Release: 	%mkrel 1
+License: 	GPL+
 Group: 		Sciences/Mathematics
 URL: 		http://maxima.sourceforge.net
-Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.bz2
+Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.gz
 Source1:	icons-%{name}.tar.bz2
-#Patch0:		maxima-5.11.0-gv.patch
+#Patch0:	maxima-5.11.0-gv.patch
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-root
 BuildRequires:	texinfo
 BuildRequires:	tetex
@@ -62,23 +62,6 @@ based on the original Macsyma developed at MIT in the 1970's.  It is
 quite reliable, and has good garbage collection, and no memory leaks.
 It comes with hundreds of self tests.
 
-%post
-%_install_info maxima.info
-
-%postun
-%_remove_install_info maxima.info
-
-%files
-%defattr(-,root,root)
-%doc AUTHORS COPYING ChangeLog INSTALL README README.lisps
-#%doc doc/info/maxima.pdf
-%{_bindir}/maxima
-%{_libdir}/maxima/%{version}/mgnuplot
-%{_datadir}/maxima/%{version}/*
-%{_infodir}/*.info*
-%{_infodir}/maxima-index.lisp
-%{_mandir}/man1/maxima.*
-
 #--------------------------------------------------------------------
 
 %package gui
@@ -94,9 +77,7 @@ Tcl/Tk GUI interface to Maxima.
 %defattr(-,root,root)
 %{_bindir}/xmaxima
 %{_datadir}/applications/mandriva-%{name}.desktop
-%{_iconsdir}/*.png
-%{_liconsdir}/*.png
-%{_miconsdir}/*.png
+%{_iconsdir}/hicolor/*/apps/*.png
 
 #--------------------------------------------------------------------
 
@@ -188,9 +169,8 @@ Exec=%{_bindir}/%{name}
 Icon=%{name}
 Terminal=false
 Type=Application
-Categories=Science;Math;
+Categories=Education;Science;Math;NumericalAnalysis;
 EOF
-
 
 # icons
 mkdir -p $RPM_BUILD_ROOT%{_iconsdir}
@@ -199,5 +179,25 @@ tar xjf %{SOURCE1} -C $RPM_BUILD_ROOT%{_iconsdir}
 # don't compress info pages
 export EXCLUDE_FROM_COMPRESS=info
 
+%post
+%_install_info maxima.info
+%update_icon_cache hicolor
+
+%postun
+%_remove_install_info maxima.info
+%clean_icon_cache hicolor
+
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%doc AUTHORS COPYING ChangeLog INSTALL README README.lisps
+#%doc doc/info/maxima.pdf
+%{_bindir}/maxima
+%{_libdir}/maxima/%{version}/mgnuplot
+%{_datadir}/maxima/%{version}/*
+%{_infodir}/*.info*
+%{_infodir}/maxima-index.lisp
+%{_mandir}/man1/maxima.*
+
