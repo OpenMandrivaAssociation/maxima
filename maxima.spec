@@ -42,7 +42,6 @@ Requires: 	tk
 Requires:       tcl
 Requires:	maxima-runtime
 Requires:	gnuplot
-Requires:	gv
 %if %{enable_clisp}
 BuildRequires:	clisp
 %endif
