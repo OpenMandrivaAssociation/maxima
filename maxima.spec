@@ -28,7 +28,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.13.0
-Release: 	%mkrel 3
+Release: 	%mkrel 4
 License: 	GPL+
 Group: 		Sciences/Mathematics
 URL: 		http://maxima.sourceforge.net
@@ -164,7 +164,7 @@ cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 [Desktop Entry]
 Name=Maxima
 Comment=Tcl/Tk interface to Maxima
-Exec=%{_bindir}/%{name} 
+Exec=%{_bindir}/xmaxima
 Icon=%{name}
 Terminal=false
 Type=Application
