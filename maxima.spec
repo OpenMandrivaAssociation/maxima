@@ -35,7 +35,6 @@ URL: 		http://maxima.sourceforge.net
 Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.gz
 Source1:	icons-%{name}.tar.bz2
 Patch0:		maxima-5.13.0-xdg-utils.patch
-BuildRoot: 	%{_tmppath}/%{name}-%{version}-root
 BuildRequires:	texinfo
 BuildRequires:	tetex
 Requires: 	tk
