@@ -28,7 +28,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.13.0
-Release: 	%mkrel 4
+Release: 	%mkrel 5
 License: 	GPL+
 Group: 		Sciences/Mathematics
 URL: 		http://maxima.sourceforge.net
@@ -119,6 +119,7 @@ Maxima compiled with CMUCL.
 Summary: Maxima compiled with GCL
 Group: 		Sciences/Mathematics
 Requires:	maxima = %{version}-%{release}
+Suggests:	rlwrap
 Provides:	maxima-runtime = %{version}-%{release}
 %description runtime-gcl
 Maxima compiled with Gnu Common Lisp.
