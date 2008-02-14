@@ -31,6 +31,7 @@ Version: 	5.13.0
 Release: 	%mkrel 5
 License: 	GPL+
 Group: 		Sciences/Mathematics
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 URL: 		http://maxima.sourceforge.net
 Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.gz
 Source1:	icons-%{name}.tar.bz2
