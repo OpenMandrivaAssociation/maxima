@@ -27,13 +27,13 @@
 
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
-Version: 	5.13.0
-Release: 	%mkrel 5
+Version: 	5.14.0
+Release: 	%mkrel 1
 License: 	GPL+
 Group: 		Sciences/Mathematics
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 URL: 		http://maxima.sourceforge.net
-Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.gz
+Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.bz2
 Source1:	icons-%{name}.tar.bz2
 Patch0:		maxima-5.13.0-xdg-utils.patch
 BuildRequires:	texinfo
@@ -198,6 +198,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/maxima/%{version}/mgnuplot
 %{_datadir}/maxima/%{version}/*
 %{_infodir}/*.info*
-%{_infodir}/maxima-index.lisp
+%{_infodir}/maxima-index.lisp*
 %{_mandir}/man1/maxima.*
 
