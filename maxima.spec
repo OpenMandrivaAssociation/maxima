@@ -28,7 +28,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.14.0
-Release: 	%mkrel 1
+Release: 	%mkrel 2
 License: 	GPL+
 Group: 		Sciences/Mathematics
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -36,6 +36,8 @@ URL: 		http://maxima.sourceforge.net
 Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.bz2
 Source1:	icons-%{name}.tar.bz2
 Patch0:		maxima-5.13.0-xdg-utils.patch
+Patch1:		maxima-5.14.0-lapack-texi.patch
+Patch2:		maxima-5.14.0-missed-extract-categories.patch
 BuildRequires:	texinfo
 BuildRequires:	tetex
 Requires: 	tk
@@ -136,6 +138,8 @@ Maxima compiled with Gnu Common Lisp.
 %prep
 %setup -q -n %{name}-%{version}
 %patch0 -p1 -b .xdg
+%patch1 -p1
+%patch2 -p1 -b .extract
 
 %build
 export GCL_ANSI=y
@@ -193,7 +197,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %doc AUTHORS COPYING ChangeLog INSTALL README README.lisps
-#%doc doc/info/maxima.pdf
+%doc doc/info/maxima.pdf
 %{_bindir}/maxima
 %{_libdir}/maxima/%{version}/mgnuplot
 %{_datadir}/maxima/%{version}/*
