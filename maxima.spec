@@ -31,7 +31,7 @@ Version: 	5.14.0
 Release: 	%mkrel 2
 License: 	GPL+
 Group: 		Sciences/Mathematics
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 URL: 		http://maxima.sourceforge.net
 Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.bz2
 Source1:	icons-%{name}.tar.bz2
@@ -40,6 +40,9 @@ Patch1:		maxima-5.14.0-lapack-texi.patch
 Patch2:		maxima-5.14.0-missed-extract-categories.patch
 BuildRequires:	texinfo
 BuildRequires:	tetex
+BuildRequires:	tetex-latex
+BuildRequires:	tetex-dvips
+BuildRequires:	python
 Requires: 	tk
 Requires:       tcl
 Requires:	maxima-runtime
