@@ -36,7 +36,6 @@ URL: 		http://maxima.sourceforge.net
 Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.gz
 Source1:	icons-%{name}.tar.bz2
 Patch0:		maxima-5.13.0-xdg-utils.patch
-Patch1:		maxima-5.14.0-lapack-texi.patch
 Patch2:		maxima-5.14.0-missed-extract-categories.patch
 Patch3:		maxima-fix-contrib-docs.patch
 BuildRequires:	texinfo
@@ -142,7 +141,6 @@ Maxima compiled with Gnu Common Lisp.
 %prep
 %setup -q -n %{name}-%{version}
 %patch0 -p1 -b .xdg
-%patch1 -p1
 %patch2 -p1 -b .extract
 %patch3 -p1
 
