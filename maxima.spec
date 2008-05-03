@@ -27,13 +27,13 @@
 
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
-Version: 	5.14.0
-Release: 	%mkrel 3
+Version: 	5.15.0
+Release: 	%mkrel 1
 License: 	GPL+
 Group: 		Sciences/Mathematics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 URL: 		http://maxima.sourceforge.net
-Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.bz2
+Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.gz
 Source1:	icons-%{name}.tar.bz2
 Patch0:		maxima-5.13.0-xdg-utils.patch
 Patch1:		maxima-5.14.0-lapack-texi.patch
