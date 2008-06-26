@@ -28,7 +28,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.15.0
-Release: 	%mkrel 1
+Release: 	%mkrel 2
 License: 	GPL+
 Group: 		Sciences/Mathematics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -43,8 +43,8 @@ BuildRequires:	tetex
 BuildRequires:	tetex-latex
 BuildRequires:	tetex-dvips
 BuildRequires:	python
-Requires: 	tk
-Requires:       tcl
+Suggests: 	tk
+Suggests:       tcl
 Requires:	maxima-runtime
 Requires:	gnuplot
 %if %{enable_clisp}
