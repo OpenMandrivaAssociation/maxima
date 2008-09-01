@@ -1,11 +1,8 @@
 %define enable_clisp	1
 %define enable_cmucl	0
 %define enable_gcl	1
-%define defaultlisp	gcl
-
-%ifarch x86_64
-%define enable_clisp	0
-%endif
+%define enable_sbcl	1
+%define defaultlisp	sbcl
 
 %if %enable_clisp
 %define clisp_flags	--enable-clisp
@@ -25,10 +22,17 @@
 %define gcl_flags	--disable-gcl
 %endif
 
+%if %enable_sbcl
+%define sbcl_flags	--enable-sbcl
+%else
+%define sbcl_flags	--disable-sbcl
+%endif
+
+
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.16.3
-Release: 	%mkrel 1
+Release: 	%mkrel 2
 License: 	GPLv2
 Group: 		Sciences/Mathematics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -56,6 +60,11 @@ BuildRequires:	cmucl
 %if %{enable_gcl}
 BuildRequires:	gcl >= 2.5.3
 %endif
+
+%if %{enable_sbcl}
+BuildRequires:	sbcl 
+%endif
+
 
 %description
 Maxima is a full symbolic computation program.  It is full featured
@@ -138,6 +147,25 @@ Maxima compiled with Gnu Common Lisp.
 
 #--------------------------------------------------------------------
 
+%if %{enable_sbcl}
+%package runtime-sbcl
+Summary: Maxima compiled with CMUCL
+Group: Sciences/Mathematics
+Requires:	sbcl
+Requires:	maxima = %{version}-%{release}
+Provides:	maxima-runtime = %{version}-%{release}
+%description runtime-sbcl
+Maxima compiled with SBCL.
+
+
+%files runtime-sbcl
+%defattr(-,root,root)
+%{_libdir}/maxima/%{version}/binary-sbcl/*
+%endif
+
+#--------------------------------------------------------------------
+
+
 %prep
 %setup -q -n %{name}-%{version}
 %patch0 -p1 -b .xdg
@@ -152,6 +180,7 @@ CXXFLAGS="%optflags -fno-fast-math" \
 	%{clisp_flags} \
 	%{gcl_flags} \
 	%{cmucl_flags} \
+	%{sbcl_flags} \
 	--with-default-lisp=%{defaultlisp}
 
 make
@@ -199,7 +228,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS COPYING ChangeLog INSTALL README README.lisps
+%doc AUTHORS COPYING README README.lisps
 %doc doc/info/maxima.pdf
 %{_bindir}/maxima
 %{_libdir}/maxima/%{version}/mgnuplot
