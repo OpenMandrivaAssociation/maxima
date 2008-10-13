@@ -32,7 +32,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.16.3
-Release: 	%mkrel 2
+Release: 	%mkrel 3
 License: 	GPLv2
 Group: 		Sciences/Mathematics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -146,17 +146,18 @@ Maxima compiled with Gnu Common Lisp.
 %endif
 
 #--------------------------------------------------------------------
+%define sbcl_version %(rpm -q --whatprovides sbcl --queryformat %{VERSION})
 
 %if %{enable_sbcl}
 %package runtime-sbcl
 Summary: Maxima compiled with CMUCL
 Group: Sciences/Mathematics
-Requires:	sbcl
+Requires:	sbcl = %{sbcl_version}
 Requires:	maxima = %{version}-%{release}
 Provides:	maxima-runtime = %{version}-%{release}
+
 %description runtime-sbcl
 Maxima compiled with SBCL.
-
 
 %files runtime-sbcl
 %defattr(-,root,root)
@@ -164,7 +165,6 @@ Maxima compiled with SBCL.
 %endif
 
 #--------------------------------------------------------------------
-
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -236,4 +236,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/*.info*
 %{_infodir}/maxima-index.lisp*
 %{_mandir}/man1/maxima.*
-
