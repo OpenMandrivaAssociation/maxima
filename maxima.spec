@@ -32,10 +32,9 @@
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.17.1
-Release: 	%mkrel 2
+Release: 	%mkrel 3
 License: 	GPLv2
 Group: 		Sciences/Mathematics
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 URL: 		http://maxima.sourceforge.net
 Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.gz
 Source1:	icons-%{name}.tar.bz2
@@ -64,7 +63,7 @@ BuildRequires:	gcl >= 2.5.3
 %if %{enable_sbcl}
 BuildRequires:	sbcl 
 %endif
-
+BuildRoot:	%{_tmppath}/%{name}-%{version}
 
 %description
 Maxima is a full symbolic computation program.  It is full featured
