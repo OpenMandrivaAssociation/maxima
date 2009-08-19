@@ -32,7 +32,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.18.1
-Release: 	%mkrel 2
+Release: 	%mkrel 3
 License: 	GPLv2
 Group: 		Sciences/Mathematics
 URL: 		http://maxima.sourceforge.net
@@ -41,6 +41,7 @@ Source1:	icons-%{name}.tar.bz2
 Patch0:		maxima-5.13.0-xdg-utils.patch
 Patch2:		maxima-5.14.0-missed-extract-categories.patch
 Patch3:		maxima-fix-contrib-docs.patch
+Patch4:		maxima-5.18.1-clisp-noreadline.patch
 BuildRequires:	texinfo
 BuildRequires:	tetex
 BuildRequires:	tetex-latex
@@ -170,6 +171,7 @@ Maxima compiled with SBCL.
 %patch0 -p1 -b .xdg
 %patch2 -p1 -b .extract
 %patch3 -p1
+%patch4 -p1
 
 %build
 export GCL_ANSI=y
