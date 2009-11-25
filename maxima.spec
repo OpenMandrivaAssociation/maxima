@@ -32,7 +32,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.19.2
-Release: 	%mkrel 2
+Release: 	%mkrel 3
 License: 	GPLv2
 Group: 		Sciences/Mathematics
 URL: 		http://maxima.sourceforge.net
@@ -150,7 +150,7 @@ Maxima compiled with Gnu Common Lisp.
 
 %if %{enable_sbcl}
 %package runtime-sbcl
-Summary: Maxima compiled with CMUCL
+Summary: Maxima compiled with SBCL
 Group: Sciences/Mathematics
 Requires:	sbcl = %{sbcl_version}
 Requires:	maxima = %{version}-%{release}
