@@ -2,7 +2,7 @@
 %define enable_cmucl	0
 %define enable_gcl	1
 %define enable_sbcl	1
-%define enable_ecl	1
+%define enable_ecl	0
 %define defaultlisp	sbcl
 
 %if %enable_clisp
