@@ -2,7 +2,7 @@
 %define enable_cmucl	0
 %define enable_gcl	1
 %define enable_sbcl	1
-%define enable_ecl	0
+%define enable_ecl	1
 %define defaultlisp	sbcl
 
 %if %enable_clisp
@@ -48,6 +48,7 @@ Patch0:		maxima-5.13.0-xdg-utils.patch
 Patch2:		maxima-5.14.0-missed-extract-categories.patch
 Patch3:		maxima-fix-contrib-docs.patch
 Patch4:		maxima-5.19.1-clisp-noreadline.patch
+Patch5:		maxima-5.20.1-ecl-ldflags.patch
 BuildRequires:	texinfo
 BuildRequires:	tetex
 BuildRequires:	tetex-latex
@@ -200,6 +201,7 @@ Maxima compiled with ECL.
 %patch2 -p1 -b .extract
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 export GCL_ANSI=y
