@@ -2,6 +2,7 @@
 %define enable_cmucl	0
 %define enable_gcl	1
 %define enable_sbcl	1
+%define enable_ecl	1
 %define defaultlisp	sbcl
 
 %if %enable_clisp
@@ -28,11 +29,16 @@
 %define sbcl_flags	--disable-sbcl
 %endif
 
+%if %enable_ecl
+%define ecl_flags	--enable-ecl
+%else
+%define ecl_flags	--disable-ecl
+%endif
 
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.20.1
-Release: 	%mkrel 5
+Release: 	%mkrel 6
 License: 	GPLv2
 Group: 		Sciences/Mathematics
 URL: 		http://maxima.sourceforge.net
@@ -60,9 +66,11 @@ BuildRequires:	cmucl
 %if %{enable_gcl}
 BuildRequires:	gcl >= 2.5.3
 %endif
-
 %if %{enable_sbcl}
 BuildRequires:	sbcl 
+%endif
+%if %{enable_ecl}
+BuildRequires:	ecl 
 %endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}
 
@@ -106,6 +114,7 @@ Maxima compiled with clisp.
 
 %files runtime-clisp
 %defattr(-,root,root)
+%dir %{_libdir}/maxima/%{version}/binary-clisp
 %{_libdir}/maxima/%{version}/binary-clisp/*
 %endif
 
@@ -124,6 +133,7 @@ Maxima compiled with CMUCL.
 
 %files runtime-cmucl
 %defattr(-,root,root)
+%dir %{_libdir}/maxima/%{version}/binary-cmucl
 %{_libdir}/maxima/%{version}/binary-cmucl/*
 %endif
 
@@ -142,6 +152,7 @@ Maxima compiled with Gnu Common Lisp.
 %files runtime-gcl
 %defattr(-,root,root)
 %{_bindir}/rmaxima
+%dir %{_libdir}/maxima/%{version}/binary-gcl
 %{_libdir}/maxima/%{version}/binary-gcl/*
 %endif
 
@@ -161,7 +172,24 @@ Maxima compiled with SBCL.
 
 %files runtime-sbcl
 %defattr(-,root,root)
+%dir %{_libdir}/maxima/%{version}/binary-sbcl
 %{_libdir}/maxima/%{version}/binary-sbcl/*
+%endif
+
+%if %{enable_ecl}
+%package runtime-ecl
+Summary: Maxima compiled with ECL
+Group: Sciences/Mathematics
+Requires:	maxima = %{version}-%{release}
+Provides:	maxima-runtime = %{version}-%{release}
+
+%description runtime-ecl
+Maxima compiled with ECL.
+
+%files runtime-ecl
+%defattr(-,root,root)
+%dir %{_libdir}/maxima/%{version}/binary-ecl
+%{_libdir}/maxima/%{version}/binary-ecl/*
 %endif
 
 #--------------------------------------------------------------------
@@ -182,6 +210,7 @@ CXXFLAGS="%optflags -fno-fast-math" \
 	%{gcl_flags} \
 	%{cmucl_flags} \
 	%{sbcl_flags} \
+	%{ecl_flags} \
 	--with-default-lisp=%{defaultlisp}
 
 make
