@@ -38,7 +38,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.22.1
-Release: 	%mkrel 1
+Release: 	%mkrel 2
 License: 	GPLv2
 Group: 		Sciences/Mathematics
 URL: 		http://maxima.sourceforge.net
