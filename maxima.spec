@@ -1,9 +1,9 @@
 %define enable_clisp	1
 %define enable_cmucl	0
 %define enable_gcl	1
-%define enable_sbcl	1
-%define enable_ecl	1
-%define defaultlisp	sbcl
+%define enable_sbcl	0
+%define enable_ecl	0
+%define defaultlisp	clisp
 
 %if %enable_clisp
 %define clisp_flags	--enable-clisp
@@ -38,7 +38,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.22.1
-Release: 	%mkrel 2
+Release: 	%mkrel 3
 License: 	GPLv2
 Group: 		Sciences/Mathematics
 URL: 		http://maxima.sourceforge.net
@@ -65,7 +65,7 @@ BuildRequires:	clisp
 BuildRequires:	cmucl
 %endif
 %if %{enable_gcl}
-BuildRequires:	gcl >= 2.5.3
+BuildRequires:	gcl > 2.5.3
 %endif
 %if %{enable_sbcl}
 BuildRequires:	sbcl 
