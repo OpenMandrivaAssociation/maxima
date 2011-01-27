@@ -1,8 +1,8 @@
 %define enable_clisp	1
 %define enable_cmucl	0
 %define enable_gcl	1
-%define enable_sbcl	0
-%define enable_ecl	0
+%define enable_sbcl	1
+%define enable_ecl	1
 %define defaultlisp	clisp
 
 %if %enable_clisp
