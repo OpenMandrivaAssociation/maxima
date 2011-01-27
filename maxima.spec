@@ -47,7 +47,7 @@ Source1:	icons-%{name}.tar.bz2
 Patch0:		maxima-5.22.0-xdg-utils.patch
 Patch1:		maxima-5.14.0-missed-extract-categories.patch
 Patch2:		maxima-fix-contrib-docs.patch
-#Patch3:		maxima-5.22.0-clisp-noreadline.patch
+Patch3:		maxima-5.23.0-clisp-noreadline.patch
 Patch4:		maxima-5.22.0-ecl-ldflags.patch
 BuildRequires:	texinfo
 BuildRequires:	tetex
@@ -200,7 +200,7 @@ Maxima compiled with ECL.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-#patch3 -p1
+%patch3 -p1
 %patch4 -p1
 
 %build
