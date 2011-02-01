@@ -1,5 +1,4 @@
 %define enable_clisp	1
-%define enable_cmucl	0
 %define enable_gcl	1
 %define enable_sbcl	1
 %define enable_ecl	1
@@ -9,12 +8,6 @@
 %define clisp_flags	--enable-clisp
 %else
 %define clisp_flags	--disable-clisp
-%endif
-
-%if %enable_cmucl
-%define cmucl_flags	--enable-cmucl
-%else
-%define cmucl_flags	--disable-cmucl
 %endif
 
 %if %enable_gcl
@@ -60,9 +53,6 @@ Requires:	maxima-runtime
 Requires:	gnuplot
 %if %{enable_clisp}
 BuildRequires:	clisp
-%endif
-%if %{enable_cmucl}
-BuildRequires:	cmucl
 %endif
 %if %{enable_gcl}
 BuildRequires:	gcl > 2.5.3
@@ -121,25 +111,6 @@ Maxima compiled with clisp.
 
 #--------------------------------------------------------------------
 
-%if %{enable_cmucl}
-%package runtime-cmucl
-Summary: Maxima compiled with CMUCL
-Group: Sciences/Mathematics
-Requires:	cmucl
-Requires:	maxima = %{version}-%{release}
-Provides:	maxima-runtime = %{version}-%{release}
-%description runtime-cmucl
-Maxima compiled with CMUCL.
-
-
-%files runtime-cmucl
-%defattr(-,root,root)
-%dir %{_libdir}/maxima/%{version}/binary-cmucl
-%{_libdir}/maxima/%{version}/binary-cmucl/*
-%endif
-
-#--------------------------------------------------------------------
-
 %if %{enable_gcl}
 %package runtime-gcl
 Summary: Maxima compiled with GCL
@@ -158,13 +129,11 @@ Maxima compiled with Gnu Common Lisp.
 %endif
 
 #--------------------------------------------------------------------
-%define sbcl_version %(rpm -q --whatprovides sbcl --queryformat %{VERSION})
-
 %if %{enable_sbcl}
 %package runtime-sbcl
 Summary: Maxima compiled with SBCL
 Group: Sciences/Mathematics
-Requires:	sbcl = %{sbcl_version}
+Requires:	sbcl = 1.0.45
 Requires:	maxima = %{version}-%{release}
 Provides:	maxima-runtime = %{version}-%{release}
 
@@ -210,7 +179,6 @@ CXXFLAGS="%optflags -fno-fast-math" \
 %configure2_5x \
 	%{clisp_flags} \
 	%{gcl_flags} \
-	%{cmucl_flags} \
 	%{sbcl_flags} \
 	%{ecl_flags} \
 	--with-default-lisp=%{defaultlisp}
