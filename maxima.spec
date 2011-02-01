@@ -43,9 +43,8 @@ Patch2:		maxima-fix-contrib-docs.patch
 Patch3:		maxima-5.23.0-clisp-noreadline.patch
 Patch4:		maxima-5.22.0-ecl-ldflags.patch
 BuildRequires:	texinfo
-BuildRequires:	tetex
-BuildRequires:	tetex-latex
-BuildRequires:	tetex-dvips
+BuildRequires:	texlive-latex
+BuildRequires:	texlive-dvips
 BuildRequires:	python
 Suggests: 	tk
 Suggests:       tcl
