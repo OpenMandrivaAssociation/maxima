@@ -173,6 +173,9 @@ Maxima compiled with ECL.
 
 %build
 export GCL_ANSI=y
+%if %{enable_sbcl}
+export SBCL_HOME=%{_libdir}/sbcl
+%endif
 CFLAGS="%optflags -fno-fast-math" \
 CXXFLAGS="%optflags -fno-fast-math" \
 %configure2_5x \
