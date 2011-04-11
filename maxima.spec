@@ -30,7 +30,7 @@
 
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
-Version: 	5.23.0
+Version: 	5.24.0
 Release: 	%mkrel 1
 License: 	GPLv2
 Group: 		Sciences/Mathematics
@@ -43,8 +43,7 @@ Patch2:		maxima-fix-contrib-docs.patch
 Patch3:		maxima-5.23.0-clisp-noreadline.patch
 Patch4:		maxima-5.22.0-ecl-ldflags.patch
 BuildRequires:	texinfo
-BuildRequires:	texlive-latex
-BuildRequires:	texlive-dvips
+BuildRequires:	texlive
 BuildRequires:	python
 Suggests: 	tk
 Suggests:       tcl
