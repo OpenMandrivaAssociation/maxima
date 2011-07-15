@@ -31,7 +31,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.24.0
-Release: 	%mkrel 1
+Release: 	%mkrel 2
 License: 	GPLv2
 Group: 		Sciences/Mathematics
 URL: 		http://maxima.sourceforge.net
@@ -127,11 +127,13 @@ Maxima compiled with Gnu Common Lisp.
 %endif
 
 #--------------------------------------------------------------------
+%define sbcl_version %(rpm -q --whatprovides sbcl --queryformat %{VERSION})
+
 %if %{enable_sbcl}
 %package runtime-sbcl
 Summary: Maxima compiled with SBCL
 Group: Sciences/Mathematics
-Requires:	sbcl = 1.0.45
+Requires:	sbcl = %{sbcl_version}
 Requires:	maxima = %{version}-%{release}
 Provides:	maxima-runtime = %{version}-%{release}
 
@@ -144,6 +146,7 @@ Maxima compiled with SBCL.
 %{_libdir}/maxima/%{version}/binary-sbcl/*
 %endif
 
+#--------------------------------------------------------------------
 %if %{enable_ecl}
 %package runtime-ecl
 Summary: Maxima compiled with ECL
@@ -159,6 +162,48 @@ Maxima compiled with ECL.
 %dir %{_libdir}/maxima/%{version}/binary-ecl
 %{_libdir}/maxima/%{version}/binary-ecl/*
 %endif
+
+#--------------------------------------------------------------------
+%package lang-es-utf8
+Summary:        Maxima Spanish UTF-8 language pack
+Group:          Sciences/Mathematics
+Requires:       maxima = %{version}
+
+%description lang-es-utf8
+Maxima Spanish language support (UTF-8).
+
+%files lang-es-utf8
+%defattr(-,root,root)
+%doc %{_datadir}/maxima/%{version}/doc/html/es.utf8
+%{_infodir}/es.utf8
+
+#--------------------------------------------------------------------
+%package lang-pt-utf8
+Summary:        Maxima Portuguese UTF-8 language pack
+Group:          Sciences/Mathematics
+Requires:       maxima = %{version}
+
+%description lang-pt-utf8
+Maxima Portuguese language support (UTF-8).
+
+%files lang-pt-utf8
+%defattr(-,root,root)
+%doc %{_datadir}/maxima/%{version}/doc/html/pt.utf8
+%{_infodir}/pt.utf8
+
+#--------------------------------------------------------------------
+%package lang-pt_BR-utf8
+Summary:        Maxima Brazilian Portuguese UTF-8 language pack
+Group:          Sciences/Mathematics
+Requires:       maxima = %{version}
+
+%description lang-pt_BR-utf8
+Maxima Brazilian Portuguese language support (UTF-8).
+
+%files lang-pt_BR-utf8
+%defattr(-,root,root)
+%doc %{_datadir}/maxima/%{version}/doc/html/pt_BR.utf8
+%{_infodir}/pt_BR.utf8
 
 #--------------------------------------------------------------------
 
@@ -182,7 +227,10 @@ CXXFLAGS="%optflags -fno-fast-math" \
 	%{gcl_flags} \
 	%{sbcl_flags} \
 	%{ecl_flags} \
-	--with-default-lisp=%{defaultlisp}
+	--with-default-lisp=%{defaultlisp} \
+	--enable-lang-es-utf8 \
+        --enable-lang-pt-utf8 \
+        --enable-lang-pt_BR-utf8
 
 make
 make check
@@ -193,8 +241,13 @@ texi2dvi -p -t @afourpaper -t @finalout maxima.texi
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%makeinstall
+%makeinstall install-info
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
+
+# set executable rights for example scripts
+chmod +x %{buildroot}%{_datadir}/%{name}/%{version}/doc/misc/grepforvariables.sh
+chmod +x %{buildroot}%{_datadir}/%{name}/%{version}/doc/misc/processlisfiles.sh
+chmod +x %{buildroot}%{_datadir}/%{name}/%{version}/share/contrib/lurkmathml/mathmltest
 
 # menu
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
@@ -223,6 +276,30 @@ export EXCLUDE_FROM_COMPRESS=info
 %postun
 %_remove_install_info maxima.info
 %clean_icon_cache hicolor
+
+%post gui
+%install_info --info-dir=%{_infodir} %{_infodir}/xmaxima.info
+
+%postun gui
+%install_info_delete --info-dir=%{_infodir} %{_infodir}/xmaxima.info
+
+%post lang-es-utf8
+%install_info --info-dir=%{_infodir} %{_infodir}/es.utf8.info
+
+%postun lang-es-utf8
+%install_info_delete --info-dir=%{_infodir} %{_infodir}/es.utf8.info
+
+%post lang-pt-utf8
+%install_info --info-dir=%{_infodir} %{_infodir}/pt.utf8.info
+
+%postun lang-pt-utf8
+%install_info_delete --info-dir=%{_infodir} %{_infodir}/pt.utf8.info
+
+%post lang-pt_BR-utf8
+%install_info --info-dir=%{_infodir} %{_infodir}/pt_BR.utf8.info
+
+%postun lang-pt_BR-utf8
+%install_info_delete --info-dir=%{_infodir} %{_infodir}/pt_BR.utf8.info
 
 %clean
 rm -rf $RPM_BUILD_ROOT
