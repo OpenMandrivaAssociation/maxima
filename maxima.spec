@@ -18,6 +18,7 @@
 
 %if %enable_sbcl
 %define sbcl_flags	--enable-sbcl
+%define sbcl_version	1.0.47
 %else
 %define sbcl_flags	--disable-sbcl
 %endif
@@ -56,7 +57,7 @@ BuildRequires:	clisp
 BuildRequires:	gcl > 2.5.3
 %endif
 %if %{enable_sbcl}
-BuildRequires:	sbcl 
+BuildRequires:	sbcl = %{sbcl_version}
 %endif
 %if %{enable_ecl}
 BuildRequires:	ecl 
@@ -127,8 +128,6 @@ Maxima compiled with Gnu Common Lisp.
 %endif
 
 #--------------------------------------------------------------------
-%define sbcl_version %(rpm -q --whatprovides sbcl --queryformat %{VERSION})
-
 %if %{enable_sbcl}
 %package runtime-sbcl
 Summary: Maxima compiled with SBCL
