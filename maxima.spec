@@ -25,14 +25,18 @@
 
 %if %enable_ecl
 %define ecl_flags	--enable-ecl
+# build module required by sagemath runtime?
+%define sagemath	1
+%define ecllib		%(ecl -eval "(princ (SI:GET-LIBRARY-PATHNAME))" -eval "(quit)")
 %else
+%define sagemath	0
 %define ecl_flags	--disable-ecl
 %endif
 
 Summary:	Maxima Symbolic Computation Program
 Name: 		maxima
 Version: 	5.24.0
-Release: 	%mkrel 2
+Release: 	%mkrel 3
 License: 	GPLv2
 Group: 		Sciences/Mathematics
 URL: 		http://maxima.sourceforge.net
@@ -160,6 +164,9 @@ Maxima compiled with ECL.
 %defattr(-,root,root)
 %dir %{_libdir}/maxima/%{version}/binary-ecl
 %{_libdir}/maxima/%{version}/binary-ecl/*
+  %if %{sagemath}
+%{ecllib}/maxima.fas
+  %endif
 %endif
 
 #--------------------------------------------------------------------
@@ -238,6 +245,19 @@ make check
 texi2dvi -p -t @afourpaper -t @finalout maxima.texi
 )
 
+%if %{sagemath}
+# from sagemath ecl spkg
+pushd src
+    mkdir ./lisp-cache
+    ecl  \
+	-eval '(require `asdf)' \
+	-eval '(setf asdf::*user-cache* (truename "./lisp-cache"))' \
+	-eval '(load "maxima-build.lisp")' \
+	-eval '(asdf:make-build :maxima :type :fasl :move-here ".")' \
+	-eval '(quit)' 
+popd
+%endif
+
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall install-info
@@ -247,6 +267,11 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 chmod +x %{buildroot}%{_datadir}/%{name}/%{version}/doc/misc/grepforvariables.sh
 chmod +x %{buildroot}%{_datadir}/%{name}/%{version}/doc/misc/processlisfiles.sh
 chmod +x %{buildroot}%{_datadir}/%{name}/%{version}/share/contrib/lurkmathml/mathmltest
+
+%if %{sagemath}
+mkdir -p %{buildroot}%{ecllib}
+install -m755 src/maxima.fasb %{buildroot}%{ecllib}/maxima.fas
+%endif
 
 # menu
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
@@ -277,28 +302,28 @@ export EXCLUDE_FROM_COMPRESS=info
 %clean_icon_cache hicolor
 
 %post gui
-%install_info --info-dir=%{_infodir} %{_infodir}/xmaxima.info
+%_install_info --info-dir=%{_infodir} %{_infodir}/xmaxima.info
 
 %postun gui
-%install_info_delete --info-dir=%{_infodir} %{_infodir}/xmaxima.info
+%_remove_install_info --info-dir=%{_infodir} %{_infodir}/xmaxima.info
 
 %post lang-es-utf8
-%install_info --info-dir=%{_infodir} %{_infodir}/es.utf8.info
+%_install_info --info-dir=%{_infodir} %{_infodir}/es.utf8.info
 
 %postun lang-es-utf8
-%install_info_delete --info-dir=%{_infodir} %{_infodir}/es.utf8.info
+%_remove_install_info --info-dir=%{_infodir} %{_infodir}/es.utf8.info
 
 %post lang-pt-utf8
-%install_info --info-dir=%{_infodir} %{_infodir}/pt.utf8.info
+%_install_info --info-dir=%{_infodir} %{_infodir}/pt.utf8.info
 
 %postun lang-pt-utf8
-%install_info_delete --info-dir=%{_infodir} %{_infodir}/pt.utf8.info
+%_remove_install_info --info-dir=%{_infodir} %{_infodir}/pt.utf8.info
 
 %post lang-pt_BR-utf8
-%install_info --info-dir=%{_infodir} %{_infodir}/pt_BR.utf8.info
+%_install_info --info-dir=%{_infodir} %{_infodir}/pt_BR.utf8.info
 
 %postun lang-pt_BR-utf8
-%install_info_delete --info-dir=%{_infodir} %{_infodir}/pt_BR.utf8.info
+%_remove_install_info --info-dir=%{_infodir} %{_infodir}/pt_BR.utf8.info
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -314,3 +339,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/*.info*
 %{_infodir}/maxima-index.lisp*
 %{_mandir}/man1/maxima.*
+%exclude %doc %{_datadir}/maxima/%{version}/doc/html/es.utf8
+%exclude %{_infodir}/es.utf8
+%exclude %doc %{_datadir}/maxima/%{version}/doc/html/pt.utf8
+%exclude %{_infodir}/pt.utf8
+%exclude %doc %{_datadir}/maxima/%{version}/doc/html/pt_BR.utf8
+%exclude %{_infodir}/pt_BR.utf8
