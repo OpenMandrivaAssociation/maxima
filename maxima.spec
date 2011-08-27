@@ -302,28 +302,28 @@ export EXCLUDE_FROM_COMPRESS=info
 %clean_icon_cache hicolor
 
 %post gui
-%_install_info --info-dir=%{_infodir} %{_infodir}/xmaxima.info
+%_install_info %{_infodir}/xmaxima.info
 
 %postun gui
-%_remove_install_info --info-dir=%{_infodir} %{_infodir}/xmaxima.info
+%_remove_install_info %{_infodir}/xmaxima.info
 
 %post lang-es-utf8
-%_install_info --info-dir=%{_infodir} %{_infodir}/es.utf8.info
+%_install_info %{_infodir}/es.utf8.info
 
 %postun lang-es-utf8
-%_remove_install_info --info-dir=%{_infodir} %{_infodir}/es.utf8.info
+%_remove_install_info %{_infodir}/es.utf8.info
 
 %post lang-pt-utf8
-%_install_info --info-dir=%{_infodir} %{_infodir}/pt.utf8.info
+%_install_info %{_infodir}/pt.utf8.info
 
 %postun lang-pt-utf8
-%_remove_install_info --info-dir=%{_infodir} %{_infodir}/pt.utf8.info
+%_remove_install_info %{_infodir}/pt.utf8.info
 
 %post lang-pt_BR-utf8
-%_install_info --info-dir=%{_infodir} %{_infodir}/pt_BR.utf8.info
+%_install_info %{_infodir}/pt_BR.utf8.info
 
 %postun lang-pt_BR-utf8
-%_remove_install_info --info-dir=%{_infodir} %{_infodir}/pt_BR.utf8.info
+%_remove_install_info %{_infodir}/pt_BR.utf8.info
 
 %clean
 rm -rf $RPM_BUILD_ROOT
