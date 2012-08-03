@@ -34,12 +34,12 @@
 %endif
 
 Summary:	Maxima Symbolic Computation Program
-Name: 		maxima
-Version: 	5.24.0
-Release: 	%mkrel 4
-License: 	GPLv2
-Group: 		Sciences/Mathematics
-URL: 		http://maxima.sourceforge.net
+Name:		maxima
+Version:	5.27.0
+Release:	%mkrel 1
+License:	GPLv2
+Group:		Sciences/Mathematics
+URL:		http://maxima.sourceforge.net
 Source0:	http://prdownloads.sourceforge.net/maxima/%{name}-%{version}.tar.gz
 Source1:	icons-%{name}.tar.bz2
 Patch0:		maxima-5.22.0-xdg-utils.patch
@@ -50,8 +50,8 @@ Patch4:		maxima-5.22.0-ecl-ldflags.patch
 BuildRequires:	texinfo
 BuildRequires:	texlive
 BuildRequires:	python
-Suggests: 	tk
-Suggests:       tcl
+Suggests:	tk
+Suggests:	tcl
 Requires:	maxima-runtime
 Requires:	gnuplot
 %if %{enable_clisp}
@@ -66,7 +66,6 @@ BuildRequires:	sbcl = %{sbcl_version}
 %if %{enable_ecl}
 BuildRequires:	ecl 
 %endif
-BuildRoot:	%{_tmppath}/%{name}-%{version}
 
 %description
 Maxima is a full symbolic computation program.  It is full featured
@@ -117,7 +116,7 @@ Maxima compiled with clisp.
 %if %{enable_gcl}
 %package runtime-gcl
 Summary: Maxima compiled with GCL
-Group: 		Sciences/Mathematics
+Group:		Sciences/Mathematics
 Requires:	maxima = %{version}-%{release}
 Suggests:	rlwrap
 Provides:	maxima-runtime = %{version}-%{release}
@@ -170,10 +169,24 @@ Maxima compiled with ECL.
 %endif
 
 #--------------------------------------------------------------------
+%package lang-de-utf8
+Summary:	Maxima German UTF-8 language pack
+Group:		Sciences/Mathematics
+Requires:	maxima = %{version}
+
+%description lang-de-utf8
+Maxima German language support (UTF-8).
+
+%files lang-de-utf8
+%defattr(-,root,root)
+%doc %{_datadir}/maxima/%{version}/doc/html/de.utf8
+%{_infodir}/de.utf8
+
+#--------------------------------------------------------------------
 %package lang-es-utf8
-Summary:        Maxima Spanish UTF-8 language pack
-Group:          Sciences/Mathematics
-Requires:       maxima = %{version}
+Summary:	Maxima Spanish UTF-8 language pack
+Group:		Sciences/Mathematics
+Requires:	maxima = %{version}
 
 %description lang-es-utf8
 Maxima Spanish language support (UTF-8).
@@ -185,9 +198,9 @@ Maxima Spanish language support (UTF-8).
 
 #--------------------------------------------------------------------
 %package lang-pt-utf8
-Summary:        Maxima Portuguese UTF-8 language pack
-Group:          Sciences/Mathematics
-Requires:       maxima = %{version}
+Summary:	Maxima Portuguese UTF-8 language pack
+Group:		Sciences/Mathematics
+Requires:	maxima = %{version}
 
 %description lang-pt-utf8
 Maxima Portuguese language support (UTF-8).
@@ -199,9 +212,9 @@ Maxima Portuguese language support (UTF-8).
 
 #--------------------------------------------------------------------
 %package lang-pt_BR-utf8
-Summary:        Maxima Brazilian Portuguese UTF-8 language pack
-Group:          Sciences/Mathematics
-Requires:       maxima = %{version}
+Summary:	Maxima Brazilian Portuguese UTF-8 language pack
+Group:		Sciences/Mathematics
+Requires:	maxima = %{version}
 
 %description lang-pt_BR-utf8
 Maxima Brazilian Portuguese language support (UTF-8).
@@ -214,7 +227,7 @@ Maxima Brazilian Portuguese language support (UTF-8).
 #--------------------------------------------------------------------
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -226,20 +239,20 @@ export GCL_ANSI=y
 %if %{enable_sbcl}
 export SBCL_HOME=%{_libdir}/sbcl
 %endif
-CFLAGS="%optflags -fno-fast-math" \
-CXXFLAGS="%optflags -fno-fast-math" \
+export CFLAGS="%{optflags} -fno-fast-math"
+export CXXFLAGS="%{optflags} -fno-fast-math"
 %configure2_5x \
 	%{clisp_flags} \
 	%{gcl_flags} \
 	%{sbcl_flags} \
 	%{ecl_flags} \
 	--with-default-lisp=%{defaultlisp} \
-	--enable-lang-es-utf8 \
-        --enable-lang-pt-utf8 \
-        --enable-lang-pt_BR-utf8
+  	--enable-lang-de-utf8 \
+  	--enable-lang-es-utf8 \
+	--enable-lang-pt-utf8 \
+	--enable-lang-pt_BR-utf8
 
 make
-make check
 
 (cd doc/info
 texi2dvi -p -t @afourpaper -t @finalout maxima.texi
@@ -258,10 +271,13 @@ pushd src
 popd
 %endif
 
+%check
+make check
+
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 %makeinstall install-info
-rm -f $RPM_BUILD_ROOT%{_infodir}/dir
+rm -f %{buildroot}%{_infodir}/dir
 
 # set executable rights for example scripts
 chmod +x %{buildroot}%{_datadir}/%{name}/%{version}/doc/misc/grepforvariables.sh
@@ -274,8 +290,8 @@ install -m755 src/maxima.fasb %{buildroot}%{ecllib}/maxima.fas
 %endif
 
 # menu
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
-cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
+mkdir -p %{buildroot}%{_datadir}/applications
+cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 [Desktop Entry]
 Name=Maxima
 Comment=Tcl/Tk interface to Maxima
@@ -287,46 +303,11 @@ Categories=Science;Math;
 EOF
 
 # icons
-mkdir -p $RPM_BUILD_ROOT%{_iconsdir}
-tar xjf %{SOURCE1} -C $RPM_BUILD_ROOT%{_iconsdir}
+mkdir -p %{buildroot}%{_iconsdir}
+tar xjf %{SOURCE1} -C %{buildroot}%{_iconsdir}
 
 # don't compress info pages
 export EXCLUDE_FROM_COMPRESS=info
-
-%post
-%_install_info maxima.info
-%update_icon_cache hicolor
-
-%postun
-%_remove_install_info maxima.info
-%clean_icon_cache hicolor
-
-%post gui
-%_install_info %{_infodir}/xmaxima.info
-
-%postun gui
-%_remove_install_info %{_infodir}/xmaxima.info
-
-%post lang-es-utf8
-%_install_info %{_infodir}/es.utf8.info
-
-%postun lang-es-utf8
-%_remove_install_info %{_infodir}/es.utf8.info
-
-%post lang-pt-utf8
-%_install_info %{_infodir}/pt.utf8.info
-
-%postun lang-pt-utf8
-%_remove_install_info %{_infodir}/pt.utf8.info
-
-%post lang-pt_BR-utf8
-%_install_info %{_infodir}/pt_BR.utf8.info
-
-%postun lang-pt_BR-utf8
-%_remove_install_info %{_infodir}/pt_BR.utf8.info
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
