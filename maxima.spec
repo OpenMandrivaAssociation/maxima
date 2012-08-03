@@ -321,6 +321,8 @@ export EXCLUDE_FROM_COMPRESS=info
 %{_mandir}/man1/maxima.*
 %exclude %doc %{_datadir}/maxima/%{version}/doc/html/es.utf8
 %exclude %{_infodir}/es.utf8
+%exclude %doc %{_datadir}/maxima/%{version}/doc/html/de.utf8
+%exclude %{_infodir}/de.utf8
 %exclude %doc %{_datadir}/maxima/%{version}/doc/html/pt.utf8
 %exclude %{_infodir}/pt.utf8
 %exclude %doc %{_datadir}/maxima/%{version}/doc/html/pt_BR.utf8
