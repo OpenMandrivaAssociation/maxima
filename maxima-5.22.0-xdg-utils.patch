@@ -1,0 +1,37 @@
+diff -p -up maxima-5.22.0/interfaces/emacs/misc/bookmode.el.orig maxima-5.22.0/interfaces/emacs/misc/bookmode.el
+--- maxima-5.22.0/interfaces/emacs/misc/bookmode.el.orig	2010-08-06 21:13:29.596377181 -0300
++++ maxima-5.22.0/interfaces/emacs/misc/bookmode.el	2010-08-06 21:14:56.923377040 -0300
+@@ -680,7 +680,7 @@ file")
+ 		
+ 		  (and tem
+ 		       (list (concat "View "(nth 1 tem))
+-			     'call-process  "ghostview" nil nil nil
++			     'call-process  "xdg-open" nil nil nil
+ 			     (expand-file-name(nth 1 tem))
+ 			     ))
+ 		  (list "Cancel")
+@@ -705,7 +705,7 @@ file")
+ 			 (concat
+ 			  (cond ((looking-at "%PS") "")
+ 				(t "gzip -dc | "))
+-			  "ghostview -")
++			  "xdg-open -")
+ 			 
+ 	)))
+ 	 
+diff -p -up maxima-5.22.0/interfaces/xmaxima/Tkmaxima/Constants.tcl.orig maxima-5.22.0/interfaces/xmaxima/Tkmaxima/Constants.tcl
+--- maxima-5.22.0/interfaces/xmaxima/Tkmaxima/Constants.tcl.orig	2010-08-06 21:14:10.801380489 -0300
++++ maxima-5.22.0/interfaces/xmaxima/Tkmaxima/Constants.tcl	2010-08-06 21:15:30.406654035 -0300
+@@ -148,9 +148,9 @@ set maxima_priv(urlHandlers) {
+     image/gif  netmath
+     image/png  netmath
+     image/jpeg netmath
+-    application/postscript "ghostview -safer %s"
+-    application/pdf "acroread %s"
+-    application/x-dvi "xdvi %s"
++    application/postscript "xdg-open -safer %s"
++    application/pdf "xdg-open %s"
++    application/x-dvi "xdg-open %s"
+ }
+ set maxima_priv(imagecounter) 0
+ 

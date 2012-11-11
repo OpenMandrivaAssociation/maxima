@@ -1,0 +1,25 @@
+--- maxima/share/contrib/Grobner/README.fixdoc	2006-02-07 05:49:49.000000000 +0100
++++ maxima/share/contrib/Grobner/README	2008-04-24 23:18:53.000000000 +0200
+@@ -2,16 +2,18 @@
+ 
+ This archive contains 2 files which provide Grobner basis support for the
+ free computer algebra system Maxima. In order to use the package, start your
+-Maxima and put it in the lisp mode (on most systems, CTRL-C will do this),
+-and execute the following commands:
++Maxima and put it in the lisp mode (running the to_lisp(); command), and
++execute the following commands:
+ 
+ (load "grobner.lisp")
+ (compile-file "grobner.lisp" :load t)
+ 
++which will create the compiled file "grobner.o" (which can be loaded with
++load("grobner.o").
+ 
+ The file grobner.demo is a Macsyma-style demo file for most of the operations
+-provided by the package. In order to run it, go to the Maxima level and
+-type:
++provided by the package. In order to run it, go to the Maxima level
++(running "(to-maxima)") and type:
+ 
+ demo("grobner.demo");
+ 
