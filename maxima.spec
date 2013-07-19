@@ -2,8 +2,7 @@
 %define debug_package	%{nil}
 
 %define enable_clisp	1
-# gcl currently broken
-%define enable_gcl	0
+%define enable_gcl	1
 %define enable_sbcl	1
 %define enable_ecl	1
 %define defaultlisp	sbcl
@@ -44,7 +43,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name:		maxima
 Version:	5.30.0
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Sciences/Mathematics
 URL:		http://maxima.sourceforge.net
@@ -146,7 +145,6 @@ Provides:	maxima-runtime = %{version}-%{release}
 Maxima compiled with Gnu Common Lisp.
 
 %files runtime-gcl
-%{_bindir}/rmaxima
 %dir %{_libdir}/maxima/%{version}/binary-gcl
 %{_libdir}/maxima/%{version}/binary-gcl/*
 %endif
