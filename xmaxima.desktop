@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=xmaxima
+Name[ru]=xmaxima
 Comment=Symbolic Computation Program
+Comment[ru]=Система компьютерной алгебры
 Exec=xmaxima
 Icon=maxima
 #MimeType=
