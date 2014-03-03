@@ -330,7 +330,7 @@ make -k check
 %{_bindir}/maxima
 %{_bindir}/rmaxima
 %{_datadir}/maxima/%{version}/*
-%{_libexecdir}/maxima/5.30.0/mgnuplot
+/usr/libexec/maxima/5.30.0/mgnuplot
 %{_infodir}/*.info*
 %{_infodir}/maxima-index.lisp*
 %{_mandir}/man1/maxima.*
