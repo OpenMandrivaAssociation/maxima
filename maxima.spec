@@ -43,7 +43,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name:		maxima
 Version:	5.30.0
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		Sciences/Mathematics
 URL:		http://maxima.sourceforge.net
@@ -329,8 +329,8 @@ make -k check
 %doc AUTHORS COPYING README README.lisps
 %{_bindir}/maxima
 %{_bindir}/rmaxima
-%{_libdir}/maxima/%{version}/mgnuplot
 %{_datadir}/maxima/%{version}/*
+%{_libexecdir}/maxima/5.30.0/mgnuplot
 %{_infodir}/*.info*
 %{_infodir}/maxima-index.lisp*
 %{_mandir}/man1/maxima.*
