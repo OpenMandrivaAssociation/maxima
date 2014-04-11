@@ -1,5 +1,7 @@
 %define _enable_debug_packages	%{nil}
 %define debug_package	%{nil}
+# maxima doesnt like the info pages compressed
+%define dont_compress 1
 
 %define enable_clisp	1
 %define enable_gcl	1
