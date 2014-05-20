@@ -23,7 +23,7 @@
 
 %if %enable_sbcl
 %define sbcl_flags	--enable-sbcl
-%define sbcl_version	1.1.3
+%define sbcl_version	1.1.4
 %else
 %define sbcl_flags	--disable-sbcl
 %endif
@@ -44,8 +44,8 @@
 
 Summary:	Maxima Symbolic Computation Program
 Name:		maxima
-Version:	5.30.0
-Release:	4
+Version:	5.33.0
+Release:	1
 License:	GPLv2
 Group:		Sciences/Mathematics
 URL:		http://maxima.sourceforge.net
