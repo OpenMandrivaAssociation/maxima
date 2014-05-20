@@ -23,7 +23,7 @@
 
 %if %enable_sbcl
 %define sbcl_flags	--enable-sbcl
-%define sbcl_version	1.1.4
+%define sbcl_version	1.1.14
 %else
 %define sbcl_flags	--disable-sbcl
 %endif
