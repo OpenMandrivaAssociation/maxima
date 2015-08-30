@@ -44,8 +44,8 @@
 
 Summary:	Maxima Symbolic Computation Program
 Name:		maxima
-Version:	5.30.0
-Release:	4
+Version:	5.37.0
+Release:	1
 License:	GPLv2
 Group:		Sciences/Mathematics
 URL:		http://maxima.sourceforge.net
@@ -57,14 +57,6 @@ Source6:	maxima-modes.el
 ## Other maxima reference docs
 Source10:	http://starship.python.net/crew/mike/TixMaxima/macref.pdf
 Source11:	http://maxima.sourceforge.net/docs/maximabook/maximabook-19-Sept-2004.pdf
-
-## upstreamable patches
-# https://bugzilla.redhat.com/show_bug.cgi?id=837142
-# https://sourceforge.net/tracker/?func=detail&aid=3539587&group_id=4933&atid=104933
-Patch50: maxima-5.28.0-clisp-noreadline.patch
-
-# Build the fasl while building the executable to avoid double initialization
-Patch51: maxima-5.30.0-build-fasl.patch
 
 BuildRequires:	desktop-file-utils
 BuildRequires:	texinfo
@@ -182,7 +174,6 @@ Maxima compiled with ECL.
 %files runtime-ecl
 %dir %{_libdir}/maxima/%{version}/binary-ecl
 %{_libdir}/maxima/%{version}/binary-ecl/*
-%{ecllib}/maxima.fas
 %endif
 
 #--------------------------------------------------------------------
@@ -241,9 +232,7 @@ Maxima Brazilian Portuguese language support (UTF-8).
 
 %prep
 %setup -q
-
-%patch50 -p1 -b .clisp-noreadline
-%patch51 -p1 -b .build-fasl
+%apply_patches
 
 # Extra docs
 install -p -m644 %{SOURCE10} .
@@ -261,7 +250,6 @@ sed -i -e \
 find -name CVS -type d | xargs --no-run-if-empty rm -rv
 
 %build
-autoreconf -fi
 
 %if %{enable_gcl}
 export GCL_ANSI=y
@@ -285,14 +273,13 @@ export CXXFLAGS="%{optflags} -fno-fast-math"
 # help avoid (re)running makeinfo/tex
 touch doc/info/maxima.info
 
-make %{?_smp_mflags}
+# makes tests run 
+touch tests/test.sh.in
+
+%make
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
-%if %{?enable_ecl}
-install -D -m755 src/binary-ecl/maxima.fas $RPM_BUILD_ROOT%{ecllib}/maxima.fas
-%endif
 
 # app icon
 install -p -D -m644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/32x32/apps/maxima.png
@@ -332,7 +319,7 @@ make -k check
 %{_bindir}/maxima
 %{_bindir}/rmaxima
 %{_datadir}/maxima/%{version}/*
-/usr/libexec/maxima/5.30.0/mgnuplot
+/usr/libexec/maxima/%{version}/mgnuplot
 %{_infodir}/*.info*
 %{_infodir}/maxima-index.lisp*
 %{_mandir}/man1/maxima.*
