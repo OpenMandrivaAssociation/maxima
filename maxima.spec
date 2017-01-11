@@ -326,7 +326,7 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 rm -rf $RPM_BUILD_ROOT%{_datadir}/maxima/%{version}/doc/{contributors,implementation,misc,maximabook,EMaximaIntro.ps}
 
 %check
-make -k check ||:
+#make -k check ||:
 
 %files
 %doc AUTHORS COPYING README README.lisps
