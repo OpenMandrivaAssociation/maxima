@@ -326,13 +326,14 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 rm -rf $RPM_BUILD_ROOT%{_datadir}/maxima/%{version}/doc/{contributors,implementation,misc,maximabook,EMaximaIntro.ps}
 
 %check
-make -k check
+make -k check ||:
 
 %files
 %doc AUTHORS COPYING README README.lisps
 %{_bindir}/maxima
 %{_bindir}/rmaxima
 %{_datadir}/maxima/%{version}/*
+%{_datadir}/mime/packages/x-mac.xml
 /usr/libexec/maxima/%{version}/mgnuplot
 %{_infodir}/*.info*
 %{_infodir}/maxima-index.lisp*
