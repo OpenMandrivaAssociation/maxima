@@ -44,7 +44,7 @@
 
 Summary:	Maxima Symbolic Computation Program
 Name:		maxima
-Version:	5.39.0
+Version:	5.42.2
 Release:	1
 License:	GPLv2
 Group:		Sciences/Mathematics
@@ -101,6 +101,30 @@ symbolic debugger source level debugger for maxima code.  Maxima is
 based on the original Macsyma developed at MIT in the 1970's.  It is
 quite reliable, and has good garbage collection, and no memory leaks.
 It comes with hundreds of self tests.
+
+%files
+%doc AUTHORS COPYING README README.lisps
+%{_bindir}/maxima
+%{_bindir}/rmaxima
+%{_datadir}/maxima/%{version}/*
+%{_datadir}/mime/packages/x-mac.xml
+/usr/libexec/maxima/%{version}/mgnuplot
+%{_infodir}/*.info*
+%{_infodir}/maxima-index.lisp*
+%{_mandir}/man1/maxima.*
+%exclude %doc %{_datadir}/maxima/%{version}/doc/html/es.utf8
+%exclude %{_infodir}/es.utf8
+%exclude %doc %{_datadir}/maxima/%{version}/doc/html/de.utf8
+%exclude %{_infodir}/de.utf8
+%exclude %doc %{_datadir}/maxima/%{version}/doc/html/pt.utf8
+%exclude %{_infodir}/pt.utf8
+%exclude %doc %{_datadir}/maxima/%{version}/doc/html/pt_BR.utf8
+%exclude %{_infodir}/pt_BR.utf8
+%{texmf}/tex/latex/emaxima
+%{emacs_sitelisp}/maxima
+%{emacs_sitelisp}/site-start.d/*
+%{xemacs_sitelisp}/maxima
+%{xemacs_sitelisp}/site-start.d/*
 
 #--------------------------------------------------------------------
 
@@ -283,7 +307,7 @@ export CXXFLAGS="%{optflags} -fno-fast-math"
 # help avoid (re)running makeinfo/tex
 touch doc/info/maxima.info
 
-# makes tests run 
+# makes tests run
 touch tests/test.sh.in
 
 %make
@@ -300,7 +324,7 @@ install -p -D -m644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/32x32/ap
 
 desktop-file-install \
   --dir="$RPM_BUILD_ROOT%{_datadir}/applications" \
-  %{SOURCE2} 
+  %{SOURCE2}
 
 # (x)emacs
 install -D -m644 -p %{SOURCE6} $RPM_BUILD_ROOT%{_datadir}/maxima/%{version}/emacs/site_start.d/maxima-modes.el
@@ -327,27 +351,3 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/maxima/%{version}/doc/{contributors,implementa
 
 %check
 #make -k check ||:
-
-%files
-%doc AUTHORS COPYING README README.lisps
-%{_bindir}/maxima
-%{_bindir}/rmaxima
-%{_datadir}/maxima/%{version}/*
-%{_datadir}/mime/packages/x-mac.xml
-/usr/libexec/maxima/%{version}/mgnuplot
-%{_infodir}/*.info*
-%{_infodir}/maxima-index.lisp*
-%{_mandir}/man1/maxima.*
-%exclude %doc %{_datadir}/maxima/%{version}/doc/html/es.utf8
-%exclude %{_infodir}/es.utf8
-%exclude %doc %{_datadir}/maxima/%{version}/doc/html/de.utf8
-%exclude %{_infodir}/de.utf8
-%exclude %doc %{_datadir}/maxima/%{version}/doc/html/pt.utf8
-%exclude %{_infodir}/pt.utf8
-%exclude %doc %{_datadir}/maxima/%{version}/doc/html/pt_BR.utf8
-%exclude %{_infodir}/pt_BR.utf8
-%{texmf}/tex/latex/emaxima
-%{emacs_sitelisp}/maxima
-%{emacs_sitelisp}/site-start.d/*
-%{xemacs_sitelisp}/maxima
-%{xemacs_sitelisp}/site-start.d/*
