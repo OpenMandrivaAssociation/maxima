@@ -108,6 +108,8 @@ It comes with hundreds of self tests.
 %{_bindir}/rmaxima
 %{_datadir}/maxima/%{version}/*
 %{_datadir}/mime/packages/x-mac.xml
+%{_datadir}/mime/packages/x-maxima-out.xml
+%{bash_completionsdir}/*maxima
 /usr/libexec/maxima/%{version}/mgnuplot
 %{_infodir}/*.info*
 %{_infodir}/maxima-index.lisp*
@@ -141,6 +143,7 @@ Tcl/Tk GUI interface to Maxima.
 %{_bindir}/xmaxima
 %{_datadir}/applications/*.desktop
 %{_iconsdir}/hicolor/*/apps/*.png
+%{_datadir}/pixmaps/*maxima*
 
 #--------------------------------------------------------------------
 
