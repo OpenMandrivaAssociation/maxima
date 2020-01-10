@@ -269,7 +269,7 @@ Maxima Brazilian Portuguese language support (UTF-8).
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 
 # Extra docs
 install -p -m644 %{SOURCE10} .
