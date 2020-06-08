@@ -1,9 +1,6 @@
-removed_sources:
-  maxima-5.39.0.tar.gz: c366966d740b17ff8a86c3b6019522c5f8195d34
-  maxima-5.42.2.tar.gz: ddb2f1405ccb2c4f2bd6712755e2dbbd9a2e57e0
 sources:
   icons-maxima.tar.bz2: d514f294cd693b5027c15fc7b0d21b3775222c79
   macref.pdf: 2370566e8b8a7f7ddf56457e5ada553176431e51
-  maxima-5.43.0.tar.gz: 49f53a2a82f7a6e2f9378131db4445e79a5141ae
+  maxima-5.44.0.tar.gz: 5f1fce915675f46823c33638480dcc1fcaf447a1
   maxima.png: b2d4f0b17d80643cf066a937535b22fcf73c014a
   maximabook-19-Sept-2004.pdf: e7b33b5b8b59a520443172f0dfe25ac9e8d6953b
