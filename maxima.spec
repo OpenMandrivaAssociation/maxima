@@ -1,5 +1,5 @@
-%define _enable_debug_packages	%{nil}
-%define debug_package	%{nil}
+%define debug_package  %{nil}
+
 # maxima doesnt like the info pages compressed
 %define dont_compress 1
 
@@ -10,13 +10,13 @@
 %bcond_with	_tests
 
 # FIXME: most of lips compiler are actually broken
-# so I disabled them and I used clist as default
-%bcond_without	clisp
-%bcond_with	gcl
-%bcond_with	sbcl
-%bcond_with	ecl
-#define defaultlisp	ecl
-%define defaultlisp	clisp
+# so I disabled them and I used clisp as default
+%bcond_with		clisp
+%bcond_with		gcl
+%bcond_with		sbcl
+%bcond_without	ecl
+%define defaultlisp	ecl
+#define defaultlisp	clisp
 
 %define clisp_flags	--%{?with_clisp:en}%{!?with_clisp:dis}able-clisp
 %define gcl_flags	--%{?with_gcl:en}%{!?with_gcl:dis}able-gcl
@@ -31,24 +31,22 @@
 
 Summary:	Maxima Symbolic Computation Program
 Name:		maxima
-Version:	5.45.1
+Version:	5.46.0
 Release:	1
 License:	GPLv2
 Group:		Sciences/Mathematics
-URL:		http://maxima.sourceforge.net
-Source0:	http://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}.tar.gz
-#Source1:	maxima.png
-#Source2:	xmaxima.desktop
+URL:		https://maxima.sourceforge.net
+Source0:	https://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}.tar.gz
 Source6:	maxima-modes.el
 ## Other maxima reference docs
-#Source10:	http://starship.python.net/crew/mike/TixMaxima/macref.pdf
-Source11:	http://maxima.sourceforge.net/docs/maximabook/maximabook-19-Sept-2004.pdf
+Source10:	http://starship.python.net/crew/mike/TixMaxima/macref.pdf
+Source11:	https://maxima.sourceforge.net/docs/maximabook/maximabook-19-Sept-2004.pdf
 ## upstreamable patches
 # https://bugzilla.redhat.com/show_bug.cgi?id=837142
 # https://sourceforge.net/tracker/?func=detail&aid=3539587&group_id=4933&atid=104933
 Patch50: maxima-5.37.1-clisp-noreadline.patch
 # Build the fasl while building the executable to avoid double initialization
-Patch51: maxima-5.30.0-build-fasl.patch
+Patch51: maxima-5.46.0-build-fasl.patch
 
 BuildRequires:	desktop-file-utils
 BuildRequires:	texinfo
@@ -87,6 +85,7 @@ It comes with hundreds of self tests.
 
 %files
 %doc AUTHORS COPYING README README-lisps.md
+%doc macref.pdf maximabook-19-Sept-2004.pdf
 %{_bindir}/%{name}
 %{_bindir}/r%{name}
 %{_libexecdir}/%{name}/%{version}/mgnuplot
@@ -94,8 +93,11 @@ It comes with hundreds of self tests.
 %{_datadir}/mime/packages/x-mac.xml
 %{_datadir}/mime/packages/x-%{name}-out.xml
 %{_datadir}/%{name}/%{version}/*
-%exclude %doc %{_datadir}/%{name}/%{version}/doc/html/{es,de,pt,pt_BR}.utf8
-%exclude %{_infodir}/{es,de,pt,pt_BR}.utf8
+%exclude %doc %{_datadir}/%{name}/%{version}/doc/html/{de,es,ja,pt,pt_BR,ru}
+#doc %lang(en) %{_datadir}/%{name}/%{version}/doc/html/*.h*
+#doc %lang(en) %{_datadir}/%{name}/%{version}/doc/share/
+%doc %{_docdir}/%{name}/EMaximaIntro.ps
+%exclude %{_infodir}/{de,es,ja,pt,pt_BR,ru}
 %{_infodir}/*.info*
 %{_infodir}/%{name}-index.lisp*
 %{_mandir}/man1/%{name}.*
@@ -109,16 +111,17 @@ It comes with hundreds of self tests.
 %package gui
 Summary: Tcl/Tk GUI interface to Maxima
 Group:		Sciences/Mathematics
-Requires:	%{name}
+Requires:	%{name} = %{version}-%{release}
 Requires:	tk
-Provides:	%{name} = %{version}-%{release}
+Provides:	x%{name} = %{version}-%{release}
+
 %description gui
 Tcl/Tk GUI interface to Maxima.
 
 %files gui
 %{_bindir}/x%{name}
 %{_metainfodir}/*.appdata.xml
-%{_datadir}/applications/*.desktop
+%{_datadir}/applications/*%{name}.desktop
 %{_datadir}/pixmaps/*%{name}*
 %{_iconsdir}/hicolor/*/apps/*.png
 
@@ -194,59 +197,29 @@ Maxima compiled with ECL.
 
 #--------------------------------------------------------------------
 
-%package lang-de-utf8
-Summary:	Maxima German UTF-8 language pack
-Group:		Sciences/Mathematics
-Requires:	%{name} = %{version}
+%define lang_subpkg(c:l:) \
+%define countrycode %{-c:%{-c*}}%{!-c:%{error:Country code not defined}} \
+%define languageame %{-l:%{-l*}}%{!-l:%{error:Language name not defined}} \
+\
+%package lang-%{countrycode}\
+Summary:	Maxima %{languageame} language pack\
+BuildArch:	noarch\
+Requires:	%{name} = %{version} \
+Supplements:  %{name}\
+\
+%description lang-%{countrycode}\
+Maxima %{languageame} language support.\
+\
+%files lang-%{countrycode}\
+%doc %lang(%{countrycode}) %{_datadir}/%{name}/%{version}/doc/html/%{countrycode}/\
+%lang(%{countrycode}) %{_infodir}/%{countrycode}
 
-%description lang-de-utf8
-Maxima German language support (UTF-8).
-
-%files lang-de-utf8
-%doc %{_datadir}/%{name}/%{version}/doc/html/de.utf8
-%{_infodir}/de.utf8
-
-#--------------------------------------------------------------------
-
-%package lang-es-utf8
-Summary:	Maxima Spanish UTF-8 language pack
-Group:		Sciences/Mathematics
-Requires:	%{name} = %{version}
-
-%description lang-es-utf8
-Maxima Spanish language support (UTF-8).
-
-%files lang-es-utf8
-%doc %{_datadir}/%{name}/%{version}/doc/html/es.utf8
-%{_infodir}/es.utf8
-
-#--------------------------------------------------------------------
-
-%package lang-pt-utf8
-Summary:	Maxima Portuguese UTF-8 language pack
-Group:		Sciences/Mathematics
-Requires:	%{name} = %{version}
-
-%description lang-pt-utf8
-Maxima Portuguese language support (UTF-8).
-
-%files lang-pt-utf8
-%doc %{_datadir}/%{name}/%{version}/doc/html/pt.utf8
-%{_infodir}/pt.utf8
-
-#--------------------------------------------------------------------
-
-%package lang-pt_BR-utf8
-Summary:	Maxima Brazilian Portuguese UTF-8 language pack
-Group:		Sciences/Mathematics
-Requires:	%{name} = %{version}
-
-%description lang-pt_BR-utf8
-Maxima Brazilian Portuguese language support (UTF-8).
-
-%files lang-pt_BR-utf8
-%doc %{_datadir}/%{name}/%{version}/doc/html/pt_BR.utf8
-%{_infodir}/pt_BR.utf8
+%lang_subpkg -c de		-l German
+%lang_subpkg -c ja		-l Japanese
+%lang_subpkg -c es		-l Spanish
+%lang_subpkg -c pt		-l Portugese
+%lang_subpkg -c pt_BR	-l Brazilian
+%lang_subpkg -c ru		-l Russian
 
 #--------------------------------------------------------------------
 
@@ -261,20 +234,23 @@ export GCL_ANSI=y
 %if %{with sbcl}
 export SBCL_HOME=%{_libdir}/sbcl
 %endif
-export CFLAGS="%{optflags} -fno-fast-math"
-export CXXFLAGS="%{optflags} -fno-fast-math"
+#export CFLAGS="%{optflags} -fno-fast-math"
+#export CXXFLAGS="%{optflags} -fno-fast-math"
 
 %configure \
-	--with-emacs-prefix=%{_datadir}/%{name}/%{version}/emacs \
 	%{clisp_flags} \
 	%{gcl_flags} \
 	%{sbcl_flags} \
 	%{ecl_flags} \
-	--with-default-lisp=%{defaultlisp} \
-  	--enable-lang-de-utf8 \
-  	--enable-lang-es-utf8 \
-	--enable-lang-pt-utf8 \
-	--enable-lang-pt_BR-utf8 LDFLAGS=
+	%{?defaultlisp:--with-default-lisp=%{defaultlisp} } \
+	--enable-lang-de \
+	--enable-lang-ja \
+	--enable-lang-es \
+	--enable-lang-pt \
+	--enable-lang-pt_BR \
+	--enable-lang-ru \
+	--with-emacs-prefix=%{_datadir}/%{name}/%{version}/emacs \
+	%{nil}
 
 # help avoid (re)running makeinfo/tex
 touch doc/info/maxima.info
@@ -290,56 +266,40 @@ make -C doc/info pdf
 
 %install
 %make_install
-# DESTDIR=%{buildroot}
 
 %if %{with ecl}
-install -D -m755 src/binary-ecl/maxima.fas %{buildroot}%{ecllib}/maxima.fas
+install -Dpm 0755 src/binary-ecl/maxima.fas %{buildroot}%{ecllib}/maxima.fas
 %endif
 
 # icons
 for d in 16 32 48 64 72 128 256
 do
-	install -dm 0755 %{buildroot}%{_iconsdir}/hicolor/${d}x${d}/apps/
+	install -dpm 0755 %{buildroot}%{_iconsdir}/hicolor/${d}x${d}/apps/
 	rsvg-convert -f png -h ${d} -w ${d} interfaces/xmaxima/net.sourceforge.maxima.svg \
 			-o %{buildroot}%{_iconsdir}/hicolor/${d}x${d}/apps/%{name}.png
 done
-install -dm 0755 %{buildroot}%{_datadir}/pixmaps/
+install -dpm 0755 %{buildroot}%{_datadir}/pixmaps/
 convert -size 32x32 interfaces/xmaxima/net.sourceforge.maxima.svg \
 	%{buildroot}%{_datadir}/pixmaps/%{name}.xpm
-#install -p -D -m644 %{SOURCE1} %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
-
-# .desktop
-install -dm 0755 %{buildroot}%{_datadir}/applications/
-cat > %{buildroot}%{_datadir}/applications/openmandriva-%{name}.desktop << EOF
-[Desktop Entry]
-Name=Maxima
-Comment=Tcl/Tk interface to Maxima
-Exec=%{_bindir}/x%{name}
-Icon=%{name}
-#MimeType=
-Type=Application
-StartupNotify=false
-Categories=Education;Science;Math;
-EOF
 
 # emacs
-install -d -m 0755 %{buildroot}%{emacs_sitelisp}/{,site-start.d}
+install -dpm 0755 %{buildroot}%{emacs_sitelisp}/site-start.d
 ln -s %{_datadir}/%{name}/%{version}/emacs %{buildroot}%{emacs_sitelisp}/%{name}
 for file in %{buildroot}%{_datadir}/%{name}/%{version}/emacs/*.el
 do
 	touch `dirname $file`/`basename $file .el`.elc
 done
-install -D -m644 -p %{SOURCE6} %{buildroot}%{emacs_sitelisp}/site-start.d/
+install -dpm 0755 %{buildroot}%{emacs_sitelisp}/site-start.d
+install -pm 0644 %{SOURCE6} %{buildroot}%{emacs_sitelisp}/site-start.d/
 touch %{buildroot}%{emacs_sitelisp}/site-start.d/maxima-modes.elc
 
 # emaxima LaTeX style (%ghost)
-install -d %{buildroot}%{texmf}/tex/latex/
-ln -sf  %{_datadir}/%{name}/%{version}/emacs %{buildroot}%{texmf}/tex/latex/e%{name}
+install -dpm 0755 %{buildroot}%{texmf}/tex/latex/
+ln -sf %{_datadir}/%{name}/%{version}/emacs %{buildroot}%{texmf}/tex/latex/e%{name}
 
 # docs
-#install -dm 0755 %{buildroot}%{_docdir}	
-#rm -rf %{buildroot}%{_datadir}/%{name}/%{version}/doc/{contributors,implementation,misc,maximabook,EMaximaIntro.ps}
-install -pm 0644 %{SOURCE10} %{buildroot}%{_docdir}%{buildroot}%{_docdir}/%{name}
+install -dpm 0755 %{buildroot}%{_docdir}/%{name}/
+install -pm 0644 %{SOURCE10} %{buildroot}%{_docdir}/%{name}
 install -pm 0644 %{SOURCE11} %{buildroot}%{_docdir}/%{name}
 mv %{buildroot}%{_datadir}/%{name}/%{version}/doc/EMaximaIntro.ps %{buildroot}%{_docdir}/%{name}
 rm -rf %{buildroot}%{_datadir}/%{name}/%{version}/doc/{contributors,implementation}
