@@ -11,11 +11,12 @@
 
 # FIXME: most of lips compiler are actually broken
 # so I disabled them and I used clisp as default
-%bcond_with		clisp
-%bcond_with		gcl
-%bcond_with		sbcl
-%bcond_without	ecl
-%define defaultlisp	ecl
+%bcond_with	clisp
+%bcond_with	gcl
+%bcond_without	sbcl
+%bcond_with	ecl
+%define defaultlisp	sbcl
+#define defaultlisp	ecl
 #define defaultlisp	clisp
 
 %define clisp_flags	--%{?with_clisp:en}%{!?with_clisp:dis}able-clisp
@@ -31,7 +32,7 @@
 
 Summary:	Maxima Symbolic Computation Program
 Name:		maxima
-Version:	5.46.0
+Version:	5.47.0
 Release:	1
 License:	GPLv2
 Group:		Sciences/Mathematics
@@ -46,7 +47,12 @@ Source11:	https://maxima.sourceforge.net/docs/maximabook/maximabook-19-Sept-2004
 # https://sourceforge.net/tracker/?func=detail&aid=3539587&group_id=4933&atid=104933
 Patch50: maxima-5.37.1-clisp-noreadline.patch
 # Build the fasl while building the executable to avoid double initialization
-Patch51: maxima-5.46.0-build-fasl.patch
+# https://github.com/sagemath/sage/blob/develop/build/pkgs/maxima/patches/maxima.system.patch
+Patch51: maxima-5.30.0-build-fasl.patch
+# handle multiple ldflags in ecl build
+Patch52: maxima-ecl_ldflags.patch
+# Invoke python3 instead of python
+#Patch53: maxima-5.43.2-python3.patch
 
 BuildRequires:	desktop-file-utils
 BuildRequires:	texinfo
@@ -63,7 +69,8 @@ BuildRequires:	clisp
 BuildRequires:	gcl > 2.5.3
 %endif
 %if %{with sbcl}
-BuildRequires:	sbcl = %{sbcl_version}
+BuildRequires:	sbcl
+#= %{sbcl_version}
 %endif
 %if %{with ecl}
 BuildRequires:	ecl
@@ -84,7 +91,8 @@ quite reliable, and has good garbage collection, and no memory leaks.
 It comes with hundreds of self tests.
 
 %files
-%doc AUTHORS COPYING README README-lisps.md
+%license COPYING 
+%doc AUTHORS README README-lisps.md
 %doc macref.pdf maximabook-19-Sept-2004.pdf
 %{_bindir}/%{name}
 %{_bindir}/r%{name}
@@ -100,6 +108,7 @@ It comes with hundreds of self tests.
 %exclude %{_infodir}/{de,es,ja,pt,pt_BR,ru}
 %{_infodir}/*.info*
 %{_infodir}/%{name}-index.lisp*
+%{_infodir}/%{name}-index-html.lisp*
 %{_mandir}/man1/%{name}.*
 %{_mandir}/{de,ru}/man1/%{name}.*
 %{texmf}/tex/latex/e%{name}
@@ -225,6 +234,10 @@ Maxima %{languageame} language support.\
 
 %prep
 %autosetup -p1
+	
+sed -i -e \
+  's/(defcustom\s+maxima-info-index-file\s+)(\S+)/$1\"maxima.info-16\"/' \
+  interfaces/emacs/emaxima/maxima.el
 
 %build
 #export PYTHON=%{__python3}
@@ -243,6 +256,7 @@ export SBCL_HOME=%{_libdir}/sbcl
 	%{sbcl_flags} \
 	%{ecl_flags} \
 	%{?defaultlisp:--with-default-lisp=%{defaultlisp} } \
+	--disable-cmucl \
 	--enable-lang-de \
 	--enable-lang-ja \
 	--enable-lang-es \
@@ -261,7 +275,7 @@ touch tests/test.sh.in
 %make_build
 
 %if %{with _pdfdoc}
-make -C doc/info pdf
+%make -C doc/info pdf
 %endif
 
 %install
