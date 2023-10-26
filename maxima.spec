@@ -4,7 +4,7 @@
 # Compressed info files break maxima's internal help.
 %global __spec_install_post %{nil}
 # debuginfo.list ends up empty/blank anyway. disable
-%global debug_package   %{nil}
+%global debug_package %{nil}
 # workaround debug-id conflicts (with sbcl)
 %global _build_id_links none
 
@@ -68,6 +68,7 @@ Patch101:	maxima-sbcl-gmp.patch
 
 BuildRequires:	desktop-file-utils
 BuildRequires:	gnuplot
+BuildRequires:	librsvg
 BuildRequires:	perl-interpreter
 BuildRequires:	perl(Getopt::Long)
 BuildRequires:	pkgconfig(bash-completion)
@@ -235,7 +236,7 @@ Maxima compiled with ECL.
 Summary:	Maxima %{languageame} language pack\
 BuildArch:	noarch\
 Requires:	%{name} = %{version} \
-Supplements:  %{name}\
+Supplements: g %{name}\
 \
 %description lang-%{countrycode}\
 Maxima %{languageame} language support.\
@@ -257,8 +258,8 @@ Maxima %{languageame} language support.\
 %autosetup -p1
 	
 sed -i -e \
-  's/(defcustom\s+maxima-info-index-file\s+)(\S+)/$1\"maxima.info-16\"/' \
-  interfaces/emacs/emaxima/maxima.el
+	's/(defcustom\s+maxima-info-index-file\s+)(\S+)/$1\"maxima.info-16\"/' \
+	interfaces/emacs/emaxima/maxima.el
 
 %build
 #export PYTHON=%{__python}
