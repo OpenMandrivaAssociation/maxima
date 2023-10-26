@@ -1,7 +1,12 @@
-%define debug_package  %{nil}
-
 # maxima doesnt like the info pages compressed
 %define dont_compress 1
+# Inhibit automatic compressing of info files.
+# Compressed info files break maxima's internal help.
+%global __spec_install_post %{nil}
+# debuginfo.list ends up empty/blank anyway. disable
+%global debug_package   %{nil}
+# workaround debug-id conflicts (with sbcl)
+%global _build_id_links none
 
 %define emacs_sitelisp	%{_datadir}/emacs/site-lisp/
 %define texmf			%{_datadir}/texmf
@@ -9,19 +14,23 @@
 %bcond_with	_pdfdoc
 %bcond_with	_tests
 
-# FIXME: most of lips compiler are actually broken
-# so I disabled them and I used clisp as default
-%bcond_with	clisp
+# FIXME: some lips compiler are actually fail to
+# compile maxima so I disabled them and I set
+# clisp as default
+# ok: clisp ecl
+# KO: gcl sbcl
+%bcond_without	clisp
 %bcond_with	gcl
-%bcond_without	sbcl
+%bcond_with	sbcl
 %bcond_with	ecl
-%define defaultlisp	sbcl
+#define defaultlisp	sbcl
 #define defaultlisp	ecl
-#define defaultlisp	clisp
+%define defaultlisp	clisp
+#define defaultlisp	gcl
 
-%define clisp_flags	--%{?with_clisp:en}%{!?with_clisp:dis}able-clisp
+%define clisp_flags	--%{?with_clisp:en}%{!?with_clisp:dis}able-clisp-exec
 %define gcl_flags	--%{?with_gcl:en}%{!?with_gcl:dis}able-gcl
-%define sbcl_flags	--%{?with_sbcl:en}%{!?with_sbcl:dis}able-sbcl
+%define sbcl_flags	--%{?with_sbcl:en}%{!?with_sbcl:dis}able-sbcl-exec
 %define ecl_flags	--%{?with_ecl:en}%{!?with_ecl:dis}able-ecl
 
 # build module required by sagemath runtime?
@@ -53,15 +62,25 @@ Patch51: maxima-5.30.0-build-fasl.patch
 Patch52: maxima-ecl_ldflags.patch
 # Invoke python3 instead of python
 #Patch53: maxima-5.43.2-python3.patch
+# (arch linux)
+Patch100:	matrixexp.patch
+Patch101:	maxima-sbcl-gmp.patch
 
 BuildRequires:	desktop-file-utils
+BuildRequires:	gnuplot
+BuildRequires:	perl-interpreter
+BuildRequires:	perl(Getopt::Long)
+BuildRequires:	pkgconfig(bash-completion)
+BuildRequires:	python
+BuildRequires:	python-vtk
+BuildRequires:	recode
 BuildRequires:	texinfo
 BuildRequires:	texlive-epsf
 BuildRequires:	texlive-ec
 BuildRequires:	texlive-cm-super
 BuildRequires:	texlive
-BuildRequires:	python
 BuildRequires:	time
+BuildRequires:	tk
 %if %{with clisp}
 BuildRequires:	clisp
 %endif
@@ -78,6 +97,7 @@ BuildRequires:	ffi-devel
 %endif
 Requires:	gnuplot
 Requires:	%{name}-runtime
+Suggests:	rlwrap
 Suggests:	tcl
 Suggests:	tk
 
@@ -107,6 +127,7 @@ It comes with hundreds of self tests.
 %doc %{_docdir}/%{name}/EMaximaIntro.ps
 %exclude %{_infodir}/{de,es,ja,pt,pt_BR,ru}
 %{_infodir}/*.info*
+%{_infodir}/dir
 %{_infodir}/%{name}-index.lisp*
 %{_infodir}/%{name}-index-html.lisp*
 %{_mandir}/man1/%{name}.*
@@ -174,7 +195,7 @@ Maxima compiled with Gnu Common Lisp.
 %package runtime-sbcl
 Summary: Maxima compiled with SBCL
 Group: Sciences/Mathematics
-Requires:	sbcl = %{sbcl_version}
+Requires:	sbcl
 Requires:	%{name} = %{version}-%{release}
 Provides:	%{name}-runtime = %{version}-%{release}
 
@@ -240,15 +261,16 @@ sed -i -e \
   interfaces/emacs/emaxima/maxima.el
 
 %build
-#export PYTHON=%{__python3}
+#export PYTHON=%{__python}
+
 %if %{with gcl}
 export GCL_ANSI=y
 %endif
 %if %{with sbcl}
 export SBCL_HOME=%{_libdir}/sbcl
 %endif
-#export CFLAGS="%{optflags} -fno-fast-math"
-#export CXXFLAGS="%{optflags} -fno-fast-math"
+export CFLAGS="%{optflags} -fno-fast-math"
+export CXXFLAGS="%{optflags} -fno-fast-math"
 
 %configure \
 	%{clisp_flags} \
@@ -267,7 +289,9 @@ export SBCL_HOME=%{_libdir}/sbcl
 	%{nil}
 
 # help avoid (re)running makeinfo/tex
-touch doc/info/maxima.info
+touch \
+	doc/info/maxima.info \
+	share/contrib/maxima-odesolve/kovacicODE.info
 
 # makes tests run
 touch tests/test.sh.in
