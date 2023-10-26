@@ -68,6 +68,7 @@ Patch101:	maxima-sbcl-gmp.patch
 
 BuildRequires:	desktop-file-utils
 BuildRequires:	gnuplot
+BuildRequires:	imagemagick
 BuildRequires:	librsvg
 BuildRequires:	perl-interpreter
 BuildRequires:	perl(Getopt::Long)
