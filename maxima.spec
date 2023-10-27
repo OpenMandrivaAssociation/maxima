@@ -129,7 +129,7 @@ It comes with hundreds of self tests.
 %doc %{_docdir}/%{name}/EMaximaIntro.ps
 %exclude %{_infodir}/{de,es,ja,pt,pt_BR,ru}
 %{_infodir}/*.info*
-%{_infodir}/dir
+#{_infodir}/dir
 %{_infodir}/%{name}-index.lisp*
 %{_infodir}/%{name}-index-html.lisp*
 %{_mandir}/man1/%{name}.*
