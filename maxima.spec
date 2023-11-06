@@ -21,17 +21,12 @@
 # KO: gcl sbcl
 %bcond_without	clisp
 %bcond_with	gcl
-%bcond_with	sbcl
-%bcond_with	ecl
-#define defaultlisp	sbcl
+%bcond_without	sbcl
+%bcond_without	ecl
+%define defaultlisp	sbcl
 #define defaultlisp	ecl
-%define defaultlisp	clisp
-#define defaultlisp	gcl
-
-%define clisp_flags	--%{?with_clisp:en}%{!?with_clisp:dis}able-clisp-exec
-%define gcl_flags	--%{?with_gcl:en}%{!?with_gcl:dis}able-gcl
-%define sbcl_flags	--%{?with_sbcl:en}%{!?with_sbcl:dis}able-sbcl-exec
-%define ecl_flags	--%{?with_ecl:en}%{!?with_ecl:dis}able-ecl
+#define defaultlisp	clisp
+#sdefine defaultlisp	gcl
 
 # build module required by sagemath runtime?
 %define sagemath	%{?with_ecl:1}%{!?with_ecl:0}
@@ -42,7 +37,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name:		maxima
 Version:	5.47.0
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Sciences/Mathematics
 URL:		https://maxima.sourceforge.net
@@ -129,7 +124,6 @@ It comes with hundreds of self tests.
 %doc %{_docdir}/%{name}/EMaximaIntro.ps
 %exclude %{_infodir}/{de,es,ja,pt,pt_BR,ru}
 %{_infodir}/*.info*
-#{_infodir}/dir
 %{_infodir}/%{name}-index.lisp*
 %{_infodir}/%{name}-index-html.lisp*
 %{_mandir}/man1/%{name}.*
@@ -258,9 +252,18 @@ Maxima %{languageame} language support.\
 %prep
 %autosetup -p1
 	
-sed -i -e \
-	's/(defcustom\s+maxima-info-index-file\s+)(\S+)/$1\"maxima.info-16\"/' \
+sed -i -e 's/(defcustom\s+maxima-info-index-file\s+)(\S+)/$1\"maxima.info-16\"/' \
 	interfaces/emacs/emaxima/maxima.el
+
+sed -i -e 's|@ARCH@|%{_target_cpu}|' src/maxima.in
+
+sed -i -e 's:/usr/local/info:/usr/share/info:' \
+	interfaces/emacs/emaxima/maxima.el
+sed -i -e 's/(defcustom\s+maxima-info-index-file\s+)(\S+)/$1\"maxima.info-16\"/' \
+  interfaces/emacs/emaxima/maxima.el
+
+# Avoid obsolescence warnings
+sed -i 's/egrep -v/grep -Ev/' configure admin/make_share_list share/Makefile.in
 
 %build
 #export PYTHON=%{__python}
@@ -268,17 +271,18 @@ sed -i -e \
 %if %{with gcl}
 export GCL_ANSI=y
 %endif
+
 %if %{with sbcl}
 export SBCL_HOME=%{_libdir}/sbcl
 %endif
+
 export CFLAGS="%{optflags} -fno-fast-math"
 export CXXFLAGS="%{optflags} -fno-fast-math"
-
 %configure \
-	%{clisp_flags} \
-	%{gcl_flags} \
-	%{sbcl_flags} \
-	%{ecl_flags} \
+	--%{?with_clisp:en}%{!?with_clisp:dis}able-clisp-exec \
+	--%{?with_gcl:en}%{!?with_gcl:dis}able-gcl \
+	--%{?with_sbcl:en}%{!?with_sbcl:dis}able-sbcl-exec \
+	--%{?with_ecl:en}%{!?with_ecl:dis}able-ecl \
 	%{?defaultlisp:--with-default-lisp=%{defaultlisp} } \
 	--disable-cmucl \
 	--enable-lang-de \
@@ -291,8 +295,7 @@ export CXXFLAGS="%{optflags} -fno-fast-math"
 	%{nil}
 
 # help avoid (re)running makeinfo/tex
-touch \
-	doc/info/maxima.info \
+touch doc/info/maxima.info \
 	share/contrib/maxima-odesolve/kovacicODE.info
 
 # makes tests run
@@ -300,8 +303,9 @@ touch tests/test.sh.in
 
 %make_build
 
+# docs
 %if %{with _pdfdoc}
-%make -C doc/info pdf
+%make_build -C doc/info pdf
 %endif
 
 %install
@@ -344,11 +348,14 @@ install -pm 0644 %{SOURCE11} %{buildroot}%{_docdir}/%{name}
 mv %{buildroot}%{_datadir}/%{name}/%{version}/doc/EMaximaIntro.ps %{buildroot}%{_docdir}/%{name}
 rm -rf %{buildroot}%{_datadir}/%{name}/%{version}/doc/{contributors,implementation}
 
+# remove unwanted files
+rm -fr %{buildroot}%{_infodir}/dir
+
 # locales
 %find_lang %{name} --with-man
 
-%if %{with _tests}
 %check
+%if %{with _tests}
 make -k check ||:
 %endif
 
