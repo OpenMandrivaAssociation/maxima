@@ -17,8 +17,8 @@
 # FIXME: some lips compiler are actually fail to
 # compile maxima so I disabled them and I set
 # clisp as default
-# ok: clisp ecl
-# KO: gcl sbcl
+# ok: clisp ecl, sbcl
+# KO: gcl
 %bcond_without	clisp
 %bcond_with	gcl
 %bcond_without	sbcl
@@ -26,7 +26,7 @@
 %define defaultlisp	sbcl
 #define defaultlisp	ecl
 #define defaultlisp	clisp
-#sdefine defaultlisp	gcl
+#define defaultlisp	gcl
 
 # build module required by sagemath runtime?
 %define sagemath	%{?with_ecl:1}%{!?with_ecl:0}
@@ -37,7 +37,7 @@
 Summary:	Maxima Symbolic Computation Program
 Name:		maxima
 Version:	5.47.0
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		Sciences/Mathematics
 URL:		https://maxima.sourceforge.net
