@@ -20,7 +20,7 @@
 # ok: clisp ecl, sbcl
 # KO: gcl
 %bcond_without	clisp
-%bcond_with	gcl
+%bcond_without	gcl
 %bcond_without	sbcl
 %bcond_without	ecl
 %define defaultlisp	sbcl
