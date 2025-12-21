@@ -61,6 +61,11 @@ Patch52: maxima-ecl_ldflags.patch
 Patch100:	matrixexp.patch
 Patch101:	maxima-sbcl-gmp.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	desktop-file-utils
 BuildRequires:	gnuplot
 BuildRequires:	imagemagick
